@@ -132,6 +132,10 @@ func main() {
 
 			w.Header().Set("Content-Type", "application/sdp")
 			w.Header().Set("Location", fmt.Sprintf("http://%s/%s", r.Host, pcid))
+			if id == "" {
+				w.WriteHeader(http.StatusCreated)
+			}
+
 
 			if _, err := w.Write([]byte(pc.LocalDescription().SDP)); err != nil {
 				log.Printf("Failed to write response: %s", err)
