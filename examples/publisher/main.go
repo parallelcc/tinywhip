@@ -11,7 +11,7 @@ import (
 	"github.com/pion/mediadevices/pkg/codec/x264"
 	"github.com/pion/mediadevices/pkg/frame"
 	"github.com/pion/mediadevices/pkg/prop"
-	"github.com/pion/webrtc/v3"
+	"github.com/pion/webrtc/v4"
 
 	_ "github.com/pion/mediadevices/pkg/driver/videotest"
 )
@@ -60,7 +60,7 @@ func main() {
 				track.ID(), err)
 		})
 
-		if _, err := pc.AddTransceiverFromTrack(track, webrtc.RtpTransceiverInit{Direction: webrtc.RTPTransceiverDirectionSendonly}); err != nil {
+		if _, err := pc.AddTransceiverFromTrack(track, webrtc.RTPTransceiverInit{Direction: webrtc.RTPTransceiverDirectionSendonly}); err != nil {
 			panic(err)
 		}
 	}

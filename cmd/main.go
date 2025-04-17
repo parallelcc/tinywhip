@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/pion/webrtc/v3"
+	"github.com/pion/webrtc/v4"
 )
 
 func main() {
@@ -49,7 +49,7 @@ func main() {
 					}
 					log.Printf("Adding track: %s", t.StreamID())
 
-					if _, err := pc.AddTransceiverFromTrack(t, webrtc.RtpTransceiverInit{Direction: webrtc.RTPTransceiverDirectionSendonly}); err != nil {
+					if _, err := pc.AddTransceiverFromTrack(t, webrtc.RTPTransceiverInit{Direction: webrtc.RTPTransceiverDirectionSendonly}); err != nil {
 						log.Printf("Failed to add track: %s", err)
 						return
 					}
@@ -135,7 +135,6 @@ func main() {
 			if id == "" {
 				w.WriteHeader(http.StatusCreated)
 			}
-
 
 			if _, err := w.Write([]byte(pc.LocalDescription().SDP)); err != nil {
 				log.Printf("Failed to write response: %s", err)
