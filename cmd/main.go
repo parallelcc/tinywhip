@@ -13,8 +13,17 @@ import (
 func main() {
 	pcs := make(map[string]*webrtc.PeerConnection)
 	tracks := []*webrtc.TrackLocalStaticRTP{}
+	mediaEngine := &webrtc.MediaEngine{}
+	mediaEngine.RegisterDefaultCodecs()
+	videoRTCPFeedback := []webrtc.RTCPFeedback{{"goog-remb", ""}, {"ccm", "fir"}, {"nack", ""}, {"nack", "pli"}}
+	mediaEngine.RegisterCodec(webrtc.RTPCodecParameters{
+		RTPCodecCapability: webrtc.RTPCodecCapability{webrtc.MimeTypeH265, 90000, 0, "", videoRTCPFeedback},
+		PayloadType:        114,
+	}, webrtc.RTPCodecTypeVideo)
+	api := webrtc.NewAPI(webrtc.WithMediaEngine(mediaEngine))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Request:", r.Method, r.URL.Path)
 		id := r.URL.Path[len("/"):]
 		switch r.Method {
 		case http.MethodGet:
@@ -28,7 +37,7 @@ func main() {
 				return
 			}
 
-			pc, err := webrtc.NewPeerConnection(webrtc.Configuration{
+			pc, err := api.NewPeerConnection(webrtc.Configuration{
 				ICEServers: []webrtc.ICEServer{{URLs: []string{"stun:stun.l.google.com:19302"}}},
 			})
 			if err != nil {
